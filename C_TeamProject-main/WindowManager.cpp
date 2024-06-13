@@ -30,11 +30,17 @@ void WindowManager::Update()
     const std::string temp3 = "+ : " + std::to_string(data->growth_item_count);
     const std::string temp4 = "- : " + std::to_string(data->poison_item_count);
     const std::string temp5 = "G : " + std::to_string(data->gate_count);
+    const std::string temp6 = "[+] : " + std::to_string(data->growth_item_target);
+    const std::string temp7 = "[-] : " + std::to_string(data->poison_item_target);
+    const std::string temp8 = "[G] : " + std::to_string(data->gate_target);
     mvprintw(HEIGHT + 1, 1, const_cast<char *>(temp.c_str())); // 현재 시간을 밑쪽에 표시
     mvprintw(HEIGHT + 2, 1, const_cast<char *>(temp2.c_str()));
     mvprintw(HEIGHT + 3, 1, const_cast<char *>(temp3.c_str()));
     mvprintw(HEIGHT + 4, 1, const_cast<char *>(temp4.c_str()));
     mvprintw(HEIGHT + 5, 1, const_cast<char *>(temp5.c_str()));
+    mvprintw(HEIGHT + 3, 10, const_cast<char *>(temp6.c_str()));
+    mvprintw(HEIGHT + 4, 10, const_cast<char *>(temp7.c_str()));
+    mvprintw(HEIGHT + 5, 10, const_cast<char *>(temp8.c_str()));
     refresh(); // 실제 스크린에 출력
 
 } // Update 함수의 구현부

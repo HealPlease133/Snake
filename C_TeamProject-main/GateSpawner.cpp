@@ -9,32 +9,36 @@ GateSpawner::GateSpawner(GameData *_data)
 void GateSpawner::SpawnGate(ObjectType itemType)
 {
     gateTime = 0;
-    
-    int p1r,p1c,p2r,p2c;
-    while(1)
+
+    int p1r, p1c, p2r, p2c;
+    while (1)
     {
         p1r = rand() % HEIGHT;
         p1c = rand() % WIDTH;
-        if (data->map[p1r][p1c]==WALL) break;
+        if (data->map[p1r][p1c] == WALL)
+            break;
     }
-    while(1)
+    while (1)
     {
         p2r = rand() % HEIGHT;
         p2c = rand() % WIDTH;
-        if (data->map[p2r][p2c]==WALL) break;
+        if (data->map[p2r][p2c] == WALL && (p1r != p2r || p1c != p2c))
+            break;
     }
-    if (first == 0)
+
+    if (!first)
     {
-        data->map[gate1Pos.y][gate1Pos.x]= WALL;
-        data->map[gate2Pos.y][gate2Pos.x]= WALL;
+        data->map[gate1Pos.y][gate1Pos.x] = WALL;
+        data->map[gate2Pos.y][gate2Pos.x] = WALL;
     }
+
     first = 0;
     data->map[p1r][p1c] = itemType;
     data->map[p2r][p2c] = itemType;
-    gate1Pos = {p1r,p1c};
-    gate2Pos = {p2r,p2c};
-
+    gate1Pos = {p1r, p1c};
+    gate2Pos = {p2r, p2c};
 }
+
 
 void GateSpawner::Update()
 {
