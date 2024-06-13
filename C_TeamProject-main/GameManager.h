@@ -34,7 +34,7 @@ public:
         return data.gameOver;
     } // 게임오버 여부를 반환
 
-    void resetMapIndex(){
+    void resetMap(){
         currentMapIndex = 0;
     }
 
@@ -49,6 +49,7 @@ public:
 
     void LoadMap(const std::string &filename)
     {
+        
         std::ifstream mapFile(filename);
         if (mapFile.is_open())
         {
