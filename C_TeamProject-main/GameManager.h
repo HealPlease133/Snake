@@ -40,9 +40,9 @@ public:
     }
     
     void resetItem(){
-        data.gate_target = 3;
-        data.growth_item_target = 5;
-        data.poison_item_target = 5;
+        data.gate_target = 1;
+        data.growth_item_target = 3;
+        data.poison_item_target = 3;
         data.gate_count = 0;
         data.growth_item_count = 0;
         data.poison_item_count = 0;
@@ -116,6 +116,9 @@ public:
         data.nowTime = 0;      // 시간 초기화
         data.gameOver = false; // 게임오버여부 초기화
         data.nowState = STOP;  // 뱀 상태 초기화
+        data.gate_count = 0;
+        data.growth_item_count = 0;
+        data.poison_item_count = 0;
         loopBehaviors.clear();
         // 틱마다 발생할 행위들의 목록------------------------------------------------------
         loopBehaviors.push_back(new InputManager(&data));  // 플레이어의 입력값을 받는다
@@ -144,9 +147,6 @@ public:
             data.growth_item_target += 3;
             data.poison_item_target += 3;
             data.gate_target += 2;
-            data.growth_item_count = 0;
-            data.poison_item_count = 0;
-            data.gate_count = 0;
             currentMapIndex++;
             Start(); // 맵 로드
         }

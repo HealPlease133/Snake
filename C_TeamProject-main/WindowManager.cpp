@@ -25,6 +25,16 @@ void WindowManager::Update()
             attroff(COLOR_PAIR(data->map[i][j])); // Attribute 사용 해제
         }
     }
+    const std::string clear_line(20, ' ');
+    mvprintw(HEIGHT + 1, 1, clear_line.c_str());
+    mvprintw(HEIGHT + 2, 1, clear_line.c_str());
+    mvprintw(HEIGHT + 3, 1, clear_line.c_str());
+    mvprintw(HEIGHT + 4, 1, clear_line.c_str());
+    mvprintw(HEIGHT + 5, 1, clear_line.c_str());
+    mvprintw(HEIGHT + 3, 10, clear_line.c_str());
+    mvprintw(HEIGHT + 4, 10, clear_line.c_str());
+    mvprintw(HEIGHT + 5, 10, clear_line.c_str());
+
     const std::string temp = "Time : " + std::to_string(data->nowTime);
     const std::string temp2 = "B : " + std::to_string(float(data->current_snake_len)/data->max_snake_len);
     const std::string temp3 = "+ : " + std::to_string(data->growth_item_count);
