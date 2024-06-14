@@ -55,6 +55,8 @@ void Snake::Update()
             entranceGateY = snakePos.front().y; // 입구 게이트의 Y좌표 저장
 
             char direction = data->nowState;
+            exitGateX = -1;
+            exitGateY = -1;
 
             for (int i = 0; i < HEIGHT; i++)
             {

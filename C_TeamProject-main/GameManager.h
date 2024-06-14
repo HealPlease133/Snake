@@ -21,7 +21,7 @@ private:
     GameManager(const GameManager &other);     // 복사 생성자
     GameManager() : currentMapIndex(0)         // 기본 생성자
     {
-        mapFiles.push_back("Map.txt");
+        // mapFiles.push_back("Map.txt");
         mapFiles.push_back("map0.txt");
         mapFiles.push_back("map1.txt");
         mapFiles.push_back("map2.txt");
@@ -141,9 +141,9 @@ public:
             && currentMapIndex < mapFiles.size() - 1) // 
          {
             data.gateUse = false;
-            data.growth_item_target += 5;
-            data.poison_item_target += 5;
-            data.gate_target += 3;
+            data.growth_item_target += 3;
+            data.poison_item_target += 3;
+            data.gate_target += 2;
             data.growth_item_count = 0;
             data.poison_item_count = 0;
             data.gate_count = 0;

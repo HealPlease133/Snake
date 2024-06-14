@@ -37,9 +37,9 @@ public:
     int max_snake_len = 0;
     int current_snake_len = 0;
     bool gateUse = false;          // gate사용 여부
-    int growth_item_target = 5;          
-    int poison_item_target = 5;
-    int gate_target = 3;            // 맵 변경 조건들
+    int growth_item_target = 3;          
+    int poison_item_target = 3;
+    int gate_target = 1;            // 맵 변경 조건들
 }; // 게임의 현재 진행사항을 나타내는 구조체
 
 typedef struct _pos
