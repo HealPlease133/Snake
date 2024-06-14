@@ -22,6 +22,7 @@ private:
     GameManager() : currentMapIndex(0)         // 기본 생성자
     {
         mapFiles.push_back("Map.txt");
+        mapFiles.push_back("map0.txt");
         mapFiles.push_back("map1.txt");
         mapFiles.push_back("map2.txt");
         mapFiles.push_back("map3.txt");
@@ -36,6 +37,15 @@ public:
 
     void resetMap(){
         currentMapIndex = 0;
+    }
+    
+    void resetItem(){
+        data.gate_target = 3;
+        data.growth_item_target = 5;
+        data.poison_item_target = 5;
+        data.gate_count = 0;
+        data.growth_item_count = 0;
+        data.poison_item_count = 0;
     }
 
     static GameManager *GetInstance()

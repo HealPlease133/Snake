@@ -41,6 +41,7 @@ int main()
             else if (gameOverOption == 'r') // 'R'을 누르면 게임 재시작
             {
                 gameManager->resetMap();
+                gameManager->resetItem();
                 GameManager::GetInstance()->Start(); // 게임 재시작
             }
         }

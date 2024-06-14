@@ -48,39 +48,103 @@ void Snake::Update()
         break;
 
     case GATE: // 게이트에 진입한 경우
-        data->gate_count++;
-        data->gateUse = true; // 뱀의 머리가 게이트 이용시 gateUse = true
-        entranceGateX = snakePos.front().x; //입구 게이트의 X좌표 저장
-        entranceGateY = snakePos.front().y; //입구 게이트의 Y좌표 저장
-        for (int i = 0; i < HEIGHT; i++)
         {
-            for (int j = 0; j < WIDTH; j++)
-            {
-                if (!(i == snakePos.front().y && j == snakePos.front().x) && data->map[i][j] == GATE)
-                {
-                    // 진입할 게이트의 위치 확인 및 진출 방향 설정
-                    if (i == 0) // 상단 벽에 있는 경우
-                        data->nowState = DOWN;
-                    else if (i == HEIGHT - 1) // 하단 벽에 있는 경우
-                        data->nowState = UP;
-                    else if (j == 0) // 좌측 벽에 있는 경우
-                        data->nowState = RIGHT;
-                    else if (j == WIDTH - 1) // 우측 벽에 있는 경우
-                        data->nowState = LEFT;
+            data->gate_count++;
+            data->gateUse = true; // 뱀의 머리가 게이트 이용시 gateUse = true
+            entranceGateX = snakePos.front().x; // 입구 게이트의 X좌표 저장
+            entranceGateY = snakePos.front().y; // 입구 게이트의 Y좌표 저장
 
-                    //진출할 게이트로 뱀의 머리를 이동
-                    snakePos.front().y = i;
-                    snakePos.front().x = j;
-                    exitGateX = j;  //출구 게이트의 X좌표 저장
-                    exitGateY = i;  //출구 게이트의 Y좌표 저장
-                    //게이트로 이동했으므로 반복문 종료
-                    i = HEIGHT;
+            char direction = data->nowState;
+
+            for (int i = 0; i < HEIGHT; i++)
+            {
+                for (int j = 0; j < WIDTH; j++)
+                {
+                    if (!(i == entranceGateY && j == entranceGateX) && data->map[i][j] == GATE)
+                    {
+                        exitGateY = i;
+                        exitGateX = j;
+                        break;
+                    }
+                }
+                if (exitGateX != -1 && exitGateY != -1)
                     break;
+            }
+
+            if (exitGateY == 0)
+            {
+                data->nowState = DOWN;
+            }
+            else if (exitGateY == HEIGHT - 1)
+            {
+                data->nowState = UP;
+            }
+            else if (exitGateX == 0)
+            {
+                data->nowState = RIGHT;
+            }
+            else if (exitGateX == WIDTH - 1)
+            {
+                data->nowState = LEFT;
+            }
+            else
+            {
+                // 중간에 있는 경우
+                bool possibleUp = exitGateY > 0 && data->map[exitGateY - 1][exitGateX] == EMPTY;
+                bool possibleDown = exitGateY < HEIGHT - 1 && data->map[exitGateY + 1][exitGateX] == EMPTY;
+                bool possibleLeft = exitGateX > 0 && data->map[exitGateY][exitGateX - 1] == EMPTY;
+                bool possibleRight = exitGateX < WIDTH - 1 && data->map[exitGateY][exitGateX + 1] == EMPTY;
+
+                if (direction == UP && possibleUp)
+                {
+                    data->nowState = UP;
+                }
+                else if (direction == DOWN && possibleDown)
+                {
+                    data->nowState = DOWN;
+                }
+                else if (direction == LEFT && possibleLeft)
+                {
+                    data->nowState = LEFT;
+                }
+                else if (direction == RIGHT && possibleRight)
+                {
+                    data->nowState = RIGHT;
+                }
+                else
+                {
+                    // 시계방향 및 반시계방향 체크
+                    if (direction == UP || direction == DOWN)
+                    {
+                        if (possibleLeft)
+                            data->nowState = LEFT;
+                        else if (possibleRight)
+                            data->nowState = RIGHT;
+                        else if (direction == UP && possibleDown)
+                            data->nowState = DOWN;
+                        else if (direction == DOWN && possibleUp)
+                            data->nowState = UP;
+                    }
+                    else if (direction == LEFT || direction == RIGHT)
+                    {
+                        if (possibleUp)
+                            data->nowState = UP;
+                        else if (possibleDown)
+                            data->nowState = DOWN;
+                        else if (direction == LEFT && possibleRight)
+                            data->nowState = RIGHT;
+                        else if (direction == RIGHT && possibleLeft)
+                            data->nowState = LEFT;
+                    }
                 }
             }
+
+            snakePos.front().y = exitGateY;
+            snakePos.front().x = exitGateX;
+
+            data->map[snakePos.back().y][snakePos.back().x] = EMPTY;
+            snakePos.pop_back();
         }
-        data->map[snakePos.back().y][snakePos.back().x] = EMPTY;
-        snakePos.pop_back();
         break;
 
     default: // 그 외 구조물(벽, 뱀의 다른 부위, 고정 벽)과 충돌한 경우 : 게임 오버
@@ -91,11 +155,11 @@ void Snake::Update()
     data->map[snakePos.front().y][snakePos.front().x] = SNAKE_HEAD;
     if (snakePos.back().x == exitGateX && snakePos.back().y == exitGateY)
     {
-        data->gateUse = false; //뱀의 마지막 꼬리의 좌표가 게이트의 좌표랑 같을 시 gateUse = false
-        data->map[entranceGateY][entranceGateX] = WALL; 
-        data->map[exitGateY][exitGateX] = WALL; //게이트 사용 후 게이트를 벽으로 변경
+        data->gateUse = false; // 뱀의 마지막 꼬리의 좌표가 게이트의 좌표랑 같을 시 gateUse = false
+        data->map[entranceGateY][entranceGateX] = WALL;
+        data->map[exitGateY][exitGateX] = WALL; // 게이트 사용 후 게이트를 벽으로 변경
     }
-    if (not data->gateUse && data->map[exitGateY][exitGateX] != WALL)
+    if (!data->gateUse && data->map[exitGateY][exitGateX] != WALL)
         data->map[exitGateY][exitGateX] = WALL;
 
     data->current_snake_len = snakePos.size();

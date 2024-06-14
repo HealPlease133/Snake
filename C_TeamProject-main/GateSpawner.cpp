@@ -1,30 +1,48 @@
 #include "GateSpawner.h"
 #include "WindowManager.h"
+#include <cstdlib>
+#include <ctime>
+#include <vector>
 
-GateSpawner::GateSpawner(GameData *_data)
+GateSpawner::GateSpawner(GameData *_data) : data(_data), first(true), gateTime(0), duration(100)
 {
-    data = _data;
-} 
+    std::srand(std::time(0)); // 랜덤 시드 초기화
+}
 
 void GateSpawner::SpawnGate(ObjectType itemType)
 {
     gateTime = 0;
 
-    int p1r, p1c, p2r, p2c;
-    while (1)
+    // 벽 위치를 저장할 벡터 선언
+    std::vector<std::pair<int, int>> wallPositions;
+    for (int r = 0; r < HEIGHT; ++r)
     {
-        p1r = rand() % HEIGHT;
-        p1c = rand() % WIDTH;
-        if (data->map[p1r][p1c] == WALL)
-            break;
+        for (int c = 0; c < WIDTH; ++c)
+        {
+            if (data->map[r][c] == WALL)
+            {
+                wallPositions.emplace_back(r, c);
+            }
+        }
     }
-    while (1)
+
+    if (wallPositions.size() < 2)
     {
-        p2r = rand() % HEIGHT;
-        p2c = rand() % WIDTH;
-        if (data->map[p2r][p2c] == WALL && (p1r != p2r || p1c != p2c))
-            break;
+        // 벽 위치가 충분하지 않은 경우 적절히 처리
+        return;
     }
+
+    int index1 = std::rand() % wallPositions.size();
+    int index2;
+    do
+    {
+        index2 = std::rand() % wallPositions.size();
+    } while (index1 == index2);
+
+    int p1r = wallPositions[index1].first;
+    int p1c = wallPositions[index1].second;
+    int p2r = wallPositions[index2].first;
+    int p2c = wallPositions[index2].second;
 
     if (!first)
     {
@@ -32,24 +50,33 @@ void GateSpawner::SpawnGate(ObjectType itemType)
         data->map[gate2Pos.y][gate2Pos.x] = WALL;
     }
 
-    first = 0;
+    first = false;
     data->map[p1r][p1c] = itemType;
     data->map[p2r][p2c] = itemType;
     gate1Pos = {p1r, p1c};
     gate2Pos = {p2r, p2c};
 }
 
-
 void GateSpawner::Update()
 {
- 
-    if (first) SpawnGate(GATE);
-        if(data->gateUse)
-            gateTime = gateTime;
-        else
-            gateTime++; //게이트 사용 중이 아닐 때만 지속시간 증가
-    if (duration <= gateTime)
+    if (first)
+    {
         SpawnGate(GATE);
-    // 지속시간을 다 한 경우 새로 생성한다
+    }
 
-} // Update함수의 구현부
+    if (data->gateUse)
+    {
+        gateTime = gateTime;
+    }
+    else
+    {
+        gateTime++; // 게이트 사용 중이 아닐 때만 지속시간 증가
+    }
+
+    if (duration <= gateTime)
+    {
+        SpawnGate(GATE);
+    }
+    // 지속시간이 다 된 경우 새로 생성
+}
+ // Update함수의 구현부
